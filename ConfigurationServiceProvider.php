@@ -47,19 +47,24 @@ class ConfigurationServiceProvider implements ServiceProviderInterface {
 			$configuration = mergeArrays(require "$path/config.php", $configuration);
 		}
 		// Loading configuration.
-		foreach ($configuration as $key => $value) {
-			$app[$key] = $value;
+		$app['configuration'] = $configuration;
+		$root = getValue('.', $configuration);
+		if (is_array($root)) {
+			foreach ($root as $key => $value) {
+				$app[$key] = $value;
+			}
 		}
 
 		// Function to get config value.
 		$app['config'] = $app->share(function($app) {
 			return function($name, $default = false) use ($app) {
+				$configuration = $app['configuration'];
 				$value = $default;
-				if (isset($app[$name])) {
-					$value = $app[$name];
+				if (isset($configuration[$name])) {
+					$value = $configuration[$name];
 				} else {
 					$path = explode('.',  $name);
-					$value = $app;
+					$value = $configuration;
 					for ($i = 0, $count = count($path); $i < $count; $i++) {
 						$subkey = $path[$i];
 						if (isset($value[$subkey])) {

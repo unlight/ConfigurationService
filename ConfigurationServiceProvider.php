@@ -47,7 +47,6 @@ class ConfigurationServiceProvider implements ServiceProviderInterface {
 			$configuration = mergeArrays(require "$path/config.php", $configuration);
 		}
 		// Loading configuration.
-		$app['configuration'] = $configuration;
 		$root = getValue('.', $configuration);
 		if (is_array($root)) {
 			foreach ($root as $key => $value) {
@@ -55,28 +54,10 @@ class ConfigurationServiceProvider implements ServiceProviderInterface {
 			}
 		}
 
-		// Function to get config value.
-		$app['config'] = $app->share(function($app) {
-			return function($name, $default = false) use ($app) {
-				$configuration = $app['configuration'];
-				$value = $default;
-				if (isset($configuration[$name])) {
-					$value = $configuration[$name];
-				} else {
-					$path = explode('.',  $name);
-					$value = $configuration;
-					for ($i = 0, $count = count($path); $i < $count; $i++) {
-						$subkey = $path[$i];
-						if (isset($value[$subkey])) {
-							$value = $value[$subkey];
-						} else {
-							return $default;
-						}
-					}
-					return $value;
-				}
-				return $value;
-			};
+		$app['configuration'] = $app->share(function($app) use ($configuration) {
+			$instance = Configuration::getInstance();
+			$instance->set($configuration);
+			return $instance;
 		});
 	}
 

@@ -54,9 +54,10 @@ class ConfigurationServiceProvider implements ServiceProviderInterface {
 			}
 		}
 
-		$app['configuration'] = $app->share(function($app) use ($configuration) {
-			$instance = Configuration::getInstance();
-			$instance->set($configuration);
+		$instance = Configuration::getInstance();
+		$instance->set($configuration);
+
+		$app['config'] = $app->share(function($app) use ($instance) {
 			return $instance;
 		});
 	}

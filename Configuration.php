@@ -17,7 +17,10 @@ class Configuration {
 	}
 
 	public function get($name, $default = false) {
-		if (strpos($name, '.') !== false) {
+		if (isset($this->data[$name])) {
+			return $this->data[$name];
+		}
+		if (strpos($name, '.') === false) {
 			return GetValue($name, $this->data, $default);
 		}
 		return GetValueR($name, $this->data, $default);

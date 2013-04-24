@@ -47,4 +47,21 @@ class Configuration {
 			return $this->set(".$name", $value);
 		}
 	}
+
+	public function save() {
+		$app = application();
+		$pathConf = $app['path.conf'];
+		$file = "$pathConf/config.php";
+		$localData = require $file;
+		foreach ($localData as $key => $value) {
+			if (array_key_exists($key, $this->data)) {
+				$newValue = $this->data[$key];
+				if (is_scalar($newValue)) {
+					$localData[$key] = $newValue;
+				}
+			}
+		}
+		var_dump($localData);
+		die;
+	}
 }

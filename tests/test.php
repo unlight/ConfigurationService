@@ -12,8 +12,11 @@ $app['config']->set('.debug', '11111111111111');
 $x = $app['config']->get('.debug', 0);
 $x = $app['config']->get('debug', 0);
 
-var_dump($app['config']->get('pictures.perpage', -1));
-var_dump($app['config']->get('costing.pack', -1));
+//var_dump($app['config']->get('pictures.perpage', -1));
+//var_dump($app['config']->get('costing.pack', -1));
+
+$app['config']->save();
+
 
 die;
 

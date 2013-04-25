@@ -26,9 +26,16 @@ class Configuration {
 		return GetValueR($name, $this->data, $default);
 	}
 
-	public function set($name, $value = null) {
+	public function set($name, $value = null, $options = false) {
 		if (is_array($name)) {
-			$this->data = mergeArrays($name, $this->data);
+			$oneByOne = GetValue("oneByOne", $options);
+			if ($oneByOne) {
+				foreach ($name as $key => $value) {
+					$this->set($key, $value);
+				}
+			} else {
+				$this->data = mergeArrays($name, $this->data);
+			}
 		} elseif (strpos($name, '.') !== false) {
 			$path = explode('.', $name);
 			$array =& $this->data;

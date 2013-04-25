@@ -47,4 +47,13 @@ class Configuration {
 			return $this->set(".$name", $value);
 		}
 	}
+
+	public function save() {
+		$app = application();
+		$pathConf = $app['path.conf'];
+		$file = "$pathConf/config.php";
+		$data = "<?php return " . var_export($this->data, true) . ";";
+		$data = str_replace("' => \n", "' => ", $data);
+		file_put_contents($file, $data);
+	}
 }
